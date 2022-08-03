@@ -2,36 +2,75 @@ import logo from '../../assets/images/Group 8.svg'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { getLogin } from '../../services/trackit'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ThreeDots } from 'react-loader-spinner'
+import Input from '../Input/Input'
+
 
 export default function Login() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [form, setForm] = useState({
+        email: '',
+        password: '',
 
-    function handleForm(e) {
-        e.preventDefault();
-        const promise = getLogin(user);
-        promise.then((res) => console.log(res.data))
+    });
+
+    const [button, setButton] = useState({
+        text: 'Entrar',
+        disabled: false,
+        isSelected: false,
+    })
+    
+    const navigate = useNavigate();
+
+    function handleForm({ name, value }) {
+        console.log(name, value);
+        setForm({
+            ...form,
+            [name]: value,
+        });
 
     }
-    const user = { email: email, password: password }
+    function sendForm(e) {
+        if (button.isSelected) {
+            e.preventDefault();
+            return
+        }
+        e.preventDefault();
+
+        setButton({
+            text: <ThreeDots color="#f9fcfd" height={80} width={80} />,
+            disabled: true,
+            isSelected: true
+        })
+        const promise = getLogin(body);
+        setTimeout(() => promise.then((res) => {
+            const user = res.data
+            navigate('/hoje', { state: { user } })
+        }), 2000)
+        promise.catch((res) => {
+            alert(res.response.data.message)
+            setButton({
+                text: "Entrar",
+                disabled: false,
+                isSelected: false
+            })
+        })
+
+    }
+    const body = { email: form.email, password: form.password }
     return (
         <Container>
             <img src={logo} alt='logo' />
-            <Form onSubmit={handleForm}>
-                <input type="email"
-                    value={email}
-                    placeholder="email"
-                    onChange={e => setEmail(e.target.value)} />
-                <input type="password"
-                    value={password}
-                    placeholder="senha"
-                    onChange={e => setPassword(e.target.value)} />
+            <Form onSubmit={sendForm} button={button.disabled}>
+                {Object.keys(form).map((name) =>
+                    <Input
+                        key={name}
+                        name={name}
+                        button={button.disabled}
+                        handleForm={handleForm} />)}
 
                 <button type='submit'>
-                    Entrar
-                    {/* <ThreeDots color="#f9fcfd" height={80} width={80} /> */}
+                    {button.text}
                 </button>
 
             </Form>
@@ -72,7 +111,7 @@ const Form = styled.form`
 input{
     width: 303px;
     height: 45px;
-    background: #FFFFFF;
+    background:${props => props.button.disabled ? '#F2F2F2' : "#FFFFFF "};
     border: 1px solid #D5D5D5;
     border-radius: 5px;
     margin:5px auto;
@@ -90,6 +129,8 @@ button {
     font-size: 20.976px;
     line-height: 26px;
     color: #FFFFFF;
+    cursor:pointer;
+    
 }
 `
 export { Container, Form }
