@@ -32,6 +32,7 @@ export default function SingUp() {
             alert("Cadastro Realizado Com sucesso")
             navigate('/')
         })
+        promise.catch((res)=>alert(res.response.data.message))
     }
     return (
         <Container>
