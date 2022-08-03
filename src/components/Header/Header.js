@@ -2,13 +2,13 @@ import headerLogo from '../../assets/images/TrackIt.svg'
 import styled from 'styled-components'
 import { useLocation } from 'react-router-dom'
 import UserContext from '../../context/UserContext';
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 
 export default function Header() {
     const location = useLocation();
-    const { userData, setUserdata } = useContext(UserContext);
+    const { userData} = useContext(UserContext);
 
-    console.log(location)
+   
     if (location.pathname === '/' || location.pathname === '/cadastro') {
         return ''
     } else {

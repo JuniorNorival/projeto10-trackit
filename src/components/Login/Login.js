@@ -13,13 +13,13 @@ export default function Login() {
         password: '',
 
     });
-
+    
     const [button, setButton] = useState({
         text: 'Entrar',
         disabled: false,
         isSelected: false,
     })
-    
+
     const navigate = useNavigate();
 
     function handleForm({ name, value }) {
@@ -58,8 +58,10 @@ export default function Login() {
 
     }
     const body = { email: form.email, password: form.password }
+    console.log(body)
     return (
         <Container>
+            
             <img src={logo} alt='logo' />
             <Form onSubmit={sendForm} button={button.disabled}>
                 {Object.keys(form).map((name) =>

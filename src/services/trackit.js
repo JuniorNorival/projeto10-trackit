@@ -22,13 +22,14 @@ function getSignUp(children) {
 }
 
 function getToday (children) {
-    console.log(children)
+    console.log(children.token)
     const config = {
     	headers: {
 		"Authorization": `Bearer ${children.token}`
 	}
     }
     const promise = axios.get (`${BaseURL}/habits/today`, config)
+    return promise
 }
 
 export { getLogin, getSignUp, getToday }
