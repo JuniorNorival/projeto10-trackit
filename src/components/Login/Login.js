@@ -23,7 +23,7 @@ export default function Login() {
     const navigate = useNavigate();
 
     function handleForm({ name, value }) {
-        console.log(name, value);
+        
         setForm({
             ...form,
             [name]: value,
@@ -43,10 +43,10 @@ export default function Login() {
             isSelected: true
         })
         const promise = getLogin(body);
-        setTimeout(() => promise.then((res) => {
+        promise.then((res) => {
             const user = res.data
             navigate('/hoje', { state: { user } })
-        }), 2000)
+        })
         promise.catch((res) => {
             alert(res.response.data.message)
             setButton({
@@ -58,7 +58,7 @@ export default function Login() {
 
     }
     const body = { email: form.email, password: form.password }
-    console.log(body)
+    
     return (
         <Container>
             
@@ -94,7 +94,7 @@ const Container = styled.div`
     margin:0 auto;
 
 p{
-        font-weight: 400;
+    font-weight: 400;
     font-size: 13.976px;
     line-height: 17px;
     text-align: center;

@@ -47,10 +47,10 @@ export default function SingUp() {
 
         const promise = getSignUp(form);
 
-        setTimeout(() => promise.then(() => {
+       promise.then(() => {
             alert("Cadastro Realizado Com sucesso")
             navigate('/')
-        }), 2000)
+        })
 
 
         promise.catch((res) => {

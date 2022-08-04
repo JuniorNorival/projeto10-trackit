@@ -1,13 +1,10 @@
 import headerLogo from '../../assets/images/TrackIt.svg'
 import styled from 'styled-components'
 import { useLocation } from 'react-router-dom'
-import UserContext from '../../context/UserContext';
-import { useContext } from 'react';
 
 export default function Header() {
     const location = useLocation();
-    const { userData} = useContext(UserContext);
-
+    const userData = JSON.parse(localStorage.getItem('trackIt'))  
    
     if (location.pathname === '/' || location.pathname === '/cadastro') {
         return ''
