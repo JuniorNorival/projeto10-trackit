@@ -8,6 +8,7 @@ import Input from '../Input/Input'
 
 
 export default function Login() {
+   
     const [form, setForm] = useState({
         email: '',
         password: '',
@@ -43,9 +44,10 @@ export default function Login() {
         })
 
         const promise = getLogin(body);
-        
+
         promise.then((res) => {
-            const user = res.data
+            const user = res.data;
+            
             localStorage.setItem('trackIt', JSON.stringify(user))
             navigate('/hoje')
         })

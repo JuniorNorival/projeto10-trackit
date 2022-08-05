@@ -1,4 +1,3 @@
-
 import styled from 'styled-components'
 import { getTodayHabits } from "../../services/trackit";
 import dayjs from 'dayjs'
@@ -7,8 +6,9 @@ import updateLocale from 'dayjs/plugin/updateLocale'
 import { useEffect, useState } from "react";
 import Footer from "../Footer/Footer";
 import { BoxHabit } from '../Habits/Habits';
+
 export default function Today() {
-    console.log(localStorage.getItem('trackIt'))
+    
 
     const [habitsToday, setHabitsToday] = useState('')
 
