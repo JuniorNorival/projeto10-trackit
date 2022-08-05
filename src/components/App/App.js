@@ -7,6 +7,7 @@ import Header from "../Header/Header"
 import Habits from "../Habits/Habits"
 import UserContext from "../../context/UserContext"
 import { useState } from "react"
+import Historic from "../Historic/Historic"
 
 export default function App() {
 
@@ -24,6 +25,7 @@ export default function App() {
                     <Route path='/cadastro' element={<SingUp />} />
                     <Route path='/hoje' element={<Today />} />
                     <Route path='/habitos' element={<Habits />} />
+                    <Route path='/historico' element={<Historic />} />
                 </Routes>
             </UserContext.Provider>
         </BrowserRouter>

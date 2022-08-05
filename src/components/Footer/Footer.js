@@ -6,8 +6,8 @@ import UserContext from "../../context/UserContext";
 import { useContext } from 'react';
 
 export default function Footer() {
-    const {progress, setProgress} = useContext(UserContext);
-    
+    const { progress, setProgress } = useContext(UserContext);
+
     return (
         <Foot>
             <Link to='/habitos'>
@@ -27,7 +27,9 @@ export default function Footer() {
                         })} />
                 </Link>
             </div>
-            <p>Histórico</p>
+            <Link to='/historico'>
+                <p>Histórico</p>
+            </Link>
         </Foot>
     )
 }

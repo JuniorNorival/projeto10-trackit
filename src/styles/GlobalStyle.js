@@ -52,5 +52,8 @@ strong {
 *{
     box-sizing:border-box;
 }
+a {
+	text-decoration:none;
+}
 `
 export default GlobalStyle

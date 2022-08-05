@@ -15,8 +15,8 @@ export default function Today() {
     const [habitsToday, setHabitsToday] = useState('')
     const promise = getTodayHabits();
     const { check, setCheck } = useContext(UserContext)
-    const { setProgress } = useContext(UserContext);
-    let cont=0;
+    const { progress, setProgress } = useContext(UserContext);
+    let cont = 0;
 
     useEffect(() => {
         promise.then((res) => setHabitsToday(res.data))
@@ -50,8 +50,8 @@ export default function Today() {
     }
 
     if (habitsToday.length > 0) {
-        habitsToday.map((habit)=>{
-            if(habit.done){
+        habitsToday.map((habit) => {
+            if (habit.done) {
                 cont++
                 setCheck(cont)
             }
@@ -61,8 +61,10 @@ export default function Today() {
     }
 
     return (
-        <Container>
+        <Container check={progress>0 ? true:false}>
             <h1>{dia}</h1>
+            {progress === 0 ? <h3>Nenhum hábito concluído ainda</h3> :
+                <h3>{(progress * 100).toFixed(0)}% dos hábitos concluídos</h3>}
             {habitsToday === '' ? '' :
                 habitsToday.map((habit, index) =>
                     <BoxHabit key={habit.id} direction={'row'} >
@@ -107,6 +109,14 @@ const Container = styled.div`
         line-height: 29px;
         color: #126BA5;
     }
+    h3 {
+    margin-left:18px;
+    font-weight: 400;
+    font-size: 17.976px;
+    line-height: 22px;
+    color:${props=> props.check ? '#8FC549':'#BABABA'};
+    }
+   
 
 `
 const Check = styled.div`
