@@ -8,24 +8,21 @@ import { weekDays } from "../../WeekDays/weekday";
 import UserContext from "../../context/UserContext";
 
 export default function Habits() {
-    const [habits, setHabits] = useState({})
+    const { habits, setHabits } = useContext(UserContext)
     const [habitsAdd, setHabitsAdd] = useState(false)
-    const { habitName, setHabitName } = useContext(UserContext)
+    const [habitName, setHabitName] = useState('')
     const [idDay, setIdDay] = useState([])
-    const [day, setDay] = useState(weekDays)
 
     useEffect(() => {
         const promise = getHabits()
         promise.then((res) => setHabits(res.data))
-
+        // eslint-disable-next-line
     }, [])
-
-
 
     function selectDay(setIdDay, day) {
 
         if (idDay.includes(day.id)) {
-            setIdDay(idDay.filter((item) => item !== day.id))
+            setIdDay(idDay.filter((id) => id !== day.id))
             day.selected = !day.selected
             return
         }
@@ -43,15 +40,14 @@ export default function Habits() {
         promise.then(() => {
             setHabitName('')
             setIdDay('')
-            {weekDays.map((day)=>day.selected=false)}
-            
-           const promise2=getHabits()
-           promise2.then((res)=>setHabits(res.data))
+            weekDays.map((day) => day.selected = false) 
+
+            const promise2 = getHabits()
+            promise2.then((res) => setHabits(res.data))
         })
-        
+
     }
-    console.log(day)
-    console.log(weekDays)
+
     return (
         <Container>
             <Higher>
@@ -81,12 +77,12 @@ export default function Habits() {
                     </Box>}
 
                 {habits.length > 0 ?
-                    habits.map((item) =>
-                        <BoxHabit key={item.id}>
-                            <p>{item.name}</p>
+                    habits.map((habit) =>
+                        <BoxHabit key={habit.id}>
+                            <p>{habit.name}</p>
                             <BoxDay>
                                 {weekDays.map((d) =>
-                                    <Days key={d.id} selected={item.days.includes(d.id) ?
+                                    <Days key={d.id} selected={habit.days.includes(d.id) ?
                                         true : false}>
                                         {d.name}</Days>)}
                             </BoxDay>
@@ -176,7 +172,7 @@ font-size: 19.976px;
 line-height: 25px;
 color: ${props => props.selected ? '#FFFFFF' : '#DBDBDB'} ;
 `
-const BoxButton =styled.div`
+const BoxButton = styled.div`
     display:flex;
     justify-content:flex-end;
 `
@@ -205,3 +201,5 @@ const BoxHabit = styled.div`
 
     }
 `
+
+export {BoxHabit}

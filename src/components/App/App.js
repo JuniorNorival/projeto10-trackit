@@ -10,11 +10,12 @@ import { useState } from "react"
 
 export default function App() {
 
-    const [habitName, setHabitName] = useState('')
+    
+    const [habits, setHabits] = useState({})
     return (
 
         <BrowserRouter>
-            <UserContext.Provider value={{habitName, setHabitName}} >
+            <UserContext.Provider value={{habits, setHabits}} >
                 <GlobalStyle />
                 <Header />
                 <Routes>

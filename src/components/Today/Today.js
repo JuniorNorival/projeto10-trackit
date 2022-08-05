@@ -1,4 +1,4 @@
-import { useLocation, Link } from "react-router-dom"
+
 import styled from 'styled-components'
 import { getTodayHabits } from "../../services/trackit";
 import dayjs from 'dayjs'
@@ -6,16 +6,16 @@ import 'dayjs/locale/pt-br'
 import updateLocale from 'dayjs/plugin/updateLocale'
 import { useEffect, useState } from "react";
 import Footer from "../Footer/Footer";
-
+import { BoxHabit } from '../Habits/Habits';
 export default function Today() {
     dayjs.locale('br')
-    const { state } = useLocation();
-    const [habits, setHabits] = useState({})
+
+    const [habitsToday, setHabitsToday] = useState('')
 
     const promise = getTodayHabits()
     useEffect(() => {
-        promise.then((res) => setHabits(res.data))
-
+        promise.then((res) => setHabitsToday(res.data))
+        // eslint-disable-next-line
     }, [])
 
     dayjs.extend(updateLocale)
@@ -25,10 +25,13 @@ export default function Today() {
     const dia = dayjs().locale('pt-br').format('dddd, DD/MM')
 
 
-
+console.log(habitsToday)
     return (
+        
         <Container>
             <h1>{dia}</h1>
+            {habitsToday === '' ? '': 
+            habitsToday.map((item)=><BoxHabit><p>{item.name}</p></BoxHabit>)}
             <Footer />
         </Container>
 
