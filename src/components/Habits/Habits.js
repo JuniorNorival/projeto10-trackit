@@ -1,15 +1,20 @@
 import { Container } from "../Today/Today"
 import styled from 'styled-components'
 import add from '../../assets/images/add.jpeg'
-import { getHabits, postHabits } from "../../services/trackit";
+import { getHabits, postHabits, deleteHabit } from "../../services/trackit";
 import { useState, useEffect, useContext } from "react";
 import Footer from "../Footer/Footer";
 import { weekDays } from "../../WeekDays/weekday";
 import UserContext from "../../context/UserContext";
+import { TrashOutline } from 'react-ionicons'
+
 
 export default function Habits() {
     const { habits, setHabits } = useContext(UserContext)
-    const [habitsAdd, setHabitsAdd] = useState(false)
+    const [habitsAdd, setHabitsAdd] = useState({
+        visible:false,
+        disabled:false
+    })
     const [habitName, setHabitName] = useState('')
     const [idDay, setIdDay] = useState([])
 
@@ -34,29 +39,41 @@ export default function Habits() {
 
     function sendHabit() {
 
-        setHabitsAdd(!setHabitsAdd)
-        const body = { name: habitName, days: idDay }
+                const body = { name: habitName, days: idDay }
         const promise = postHabits(body)
         promise.then(() => {
             setHabitName('')
             setIdDay('')
-            weekDays.map((day) => day.selected = false) 
-
+            weekDays.map((day) => day.selected = false)
+            setHabitsAdd({visible:false,
+                disabled:true})
             const promise2 = getHabits()
             promise2.then((res) => setHabits(res.data))
         })
+        promise.catch(()=>{
+            alert('Erro ao Salvar Habito')
+            setHabitsAdd({visible:true,
+                disabled:false})})
 
     }
+    function delHabit(id) {
+
+        window.confirm('Tem Certeza ?')
+        deleteHabit(id)
+        const promise = getHabits()
+        promise.then((res) => setHabits(res.data))
+    }
+
 
     return (
         <Container>
             <Higher>
                 <h2>Meus Hábitos</h2>
                 <img src={add} alt="buttonAdd"
-                    onClick={() => setHabitsAdd(true)} />
+                    onClick={() => setHabitsAdd({visible:true, disabled:false})} />
             </Higher>
             <MyHabits>
-                {!habitsAdd ? '' :
+                {!habitsAdd.visible ? '' :
                     <Box>
                         <input
                             type='text'
@@ -70,15 +87,27 @@ export default function Habits() {
                                     {d.name}</Days>)}
                         </BoxDay>
                         <BoxButton>
-                            <Button name={1}>Cancelar</Button>
-                            <Button name={2} onClick={() => sendHabit()}>Salvar</Button>
+                            <Button
+                                name={1}
+                                onClick={() => {
+                                    setHabitName('')
+                                    setIdDay('')
+                                    weekDays.map((day) => day.selected = false)
+                                    setHabitsAdd({visible:false,
+                                    disabled:false})
+                                }}
+                                disabled={habitsAdd.disabled}>Cancelar</Button>
+                            <Button
+                                name={2} 
+                                onClick={() => sendHabit()}
+                                disabled={habitsAdd.disabled}>Salvar</Button>
                         </BoxButton>
 
                     </Box>}
 
                 {habits.length > 0 ?
                     habits.map((habit) =>
-                        <BoxHabit key={habit.id}>
+                        <BoxHabit key={habit.id} direction={'column'}>
                             <p>{habit.name}</p>
                             <BoxDay>
                                 {weekDays.map((d) =>
@@ -86,6 +115,13 @@ export default function Habits() {
                                         true : false}>
                                         {d.name}</Days>)}
                             </BoxDay>
+                            <Trash onClick={() => delHabit(habit.id)}>
+                                <TrashOutline
+                                    color={'#00000'}
+                                    height="15px"
+                                    width="13px"
+                                />
+                            </Trash>
                         </BoxHabit>) :
                     <p>{`Você não tem nenhum hábito cadastrado ainda.
                     Adicione um hábito para começar a trackear!`}</p>}
@@ -113,11 +149,13 @@ h2{
 img {
     width: 40px;
     height: 35px;
+    cursor: pointer;
 }
 `
 
 const MyHabits = styled.div`
-margin:0 20px;
+
+width: 100%;
 p{
     font-weight: 400;
     font-size: 17.976px;
@@ -133,7 +171,7 @@ border-radius: 5px;
 display:flex;
 flex-direction:column;
 justify-content: center;
-margin-bottom:20px;
+margin:20px auto;
 position:relative;
 
 input{
@@ -158,6 +196,7 @@ display: flex;
 margin:0px 20px;
 `
 const Days = styled.div`
+margin: 0 2px;
 display: flex;
 align-items: center;
 justify-content: center;
@@ -171,6 +210,7 @@ font-weight: 400;
 font-size: 19.976px;
 line-height: 25px;
 color: ${props => props.selected ? '#FFFFFF' : '#DBDBDB'} ;
+cursor: pointer;
 `
 const BoxButton = styled.div`
     display:flex;
@@ -191,8 +231,12 @@ const BoxHabit = styled.div`
     height: 91px;
     background: #FFFFFF;
     border-radius: 5px;
-    margin:10px;
-    p{
+    margin:10px auto;
+    position: relative;
+    display:flex;
+    flex-direction: ${props=>props.direction === 'column'? 'column': 'row'};
+
+    h2{
         padding:10px 20px;
         font-weight: 400;
         font-size: 19.976px;
@@ -200,6 +244,14 @@ const BoxHabit = styled.div`
         color: #666666;
 
     }
+    
 `
 
-export {BoxHabit}
+const Trash = styled.span`
+        position:absolute;
+        top:5px;
+        right:5px;
+        cursor: pointer;
+`
+
+export { BoxHabit }
