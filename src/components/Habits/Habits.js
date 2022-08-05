@@ -2,18 +2,18 @@ import { Container } from "../Today/Today"
 import styled from 'styled-components'
 import add from '../../assets/images/add.jpeg'
 import { getHabits, postHabits, deleteHabit } from "../../services/trackit";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import Footer from "../Footer/Footer";
 import { weekDays } from "../../WeekDays/weekday";
-import UserContext from "../../context/UserContext";
+
 import { TrashOutline } from 'react-ionicons'
 
 
 export default function Habits() {
-    const { habits, setHabits } = useContext(UserContext)
+    const [ habits, setHabits ] =  useState({})
     const [habitsAdd, setHabitsAdd] = useState({
-        visible:false,
-        disabled:false
+        visible: false,
+        disabled: false
     })
     const [habitName, setHabitName] = useState('')
     const [idDay, setIdDay] = useState([])
@@ -39,29 +39,38 @@ export default function Habits() {
 
     function sendHabit() {
 
-                const body = { name: habitName, days: idDay }
+        const body = { name: habitName, days: idDay }
         const promise = postHabits(body)
         promise.then(() => {
             setHabitName('')
             setIdDay('')
             weekDays.map((day) => day.selected = false)
-            setHabitsAdd({visible:false,
-                disabled:true})
+            setHabitsAdd({
+                visible: false,
+                disabled: true
+            })
             const promise2 = getHabits()
             promise2.then((res) => setHabits(res.data))
         })
-        promise.catch(()=>{
+        promise.catch(() => {
             alert('Erro ao Salvar Habito')
-            setHabitsAdd({visible:true,
-                disabled:false})})
+            setHabitsAdd({
+                visible: true,
+                disabled: false
+            })
+        })
 
     }
     function delHabit(id) {
 
-        window.confirm('Tem Certeza ?')
-        deleteHabit(id)
-        const promise = getHabits()
-        promise.then((res) => setHabits(res.data))
+        const confirm = window.confirm('Tem Certeza ?');
+        if (confirm) {
+            deleteHabit(id)
+            const promise = getHabits()
+            promise.then((res) => setHabits(res.data))
+        }
+        return
+
     }
 
 
@@ -70,7 +79,7 @@ export default function Habits() {
             <Higher>
                 <h2>Meus Hábitos</h2>
                 <img src={add} alt="buttonAdd"
-                    onClick={() => setHabitsAdd({visible:true, disabled:false})} />
+                    onClick={() => setHabitsAdd({ visible: true, disabled: false })} />
             </Higher>
             <MyHabits>
                 {!habitsAdd.visible ? '' :
@@ -90,15 +99,14 @@ export default function Habits() {
                             <Button
                                 name={1}
                                 onClick={() => {
-                                    setHabitName('')
-                                    setIdDay('')
-                                    weekDays.map((day) => day.selected = false)
-                                    setHabitsAdd({visible:false,
-                                    disabled:false})
+                                    setHabitsAdd({
+                                        visible: false,
+                                        disabled: false
+                                    })
                                 }}
                                 disabled={habitsAdd.disabled}>Cancelar</Button>
                             <Button
-                                name={2} 
+                                name={2}
                                 onClick={() => sendHabit()}
                                 disabled={habitsAdd.disabled}>Salvar</Button>
                         </BoxButton>
@@ -108,7 +116,7 @@ export default function Habits() {
                 {habits.length > 0 ?
                     habits.map((habit) =>
                         <BoxHabit key={habit.id} direction={'column'}>
-                            <p>{habit.name}</p>
+                            <h2>{habit.name}</h2>
                             <BoxDay>
                                 {weekDays.map((d) =>
                                     <Days key={d.id} selected={habit.days.includes(d.id) ?
@@ -151,6 +159,7 @@ img {
     height: 35px;
     cursor: pointer;
 }
+
 `
 
 const MyHabits = styled.div`
@@ -234,7 +243,7 @@ const BoxHabit = styled.div`
     margin:10px auto;
     position: relative;
     display:flex;
-    flex-direction: ${props=>props.direction === 'column'? 'column': 'row'};
+    flex-direction: ${props => props.direction === 'column' ? 'column' : 'row'};
 
     h2{
         padding:10px 20px;
@@ -244,7 +253,6 @@ const BoxHabit = styled.div`
         color: #666666;
 
     }
-    
 `
 
 const Trash = styled.span`

@@ -11,11 +11,12 @@ import { useState } from "react"
 export default function App() {
 
     
-    const [habits, setHabits] = useState({})
+    const [progress, setProgress] = useState(0)
+    const [check, setCheck] = useState(0)
     return (
 
         <BrowserRouter>
-            <UserContext.Provider value={{habits, setHabits}} >
+            <UserContext.Provider value={{progress, setProgress, check, setCheck}} >
                 <GlobalStyle />
                 <Header />
                 <Routes>

@@ -2,6 +2,7 @@ import headerLogo from '../../assets/images/TrackIt.svg'
 import styled from 'styled-components'
 import { useLocation } from 'react-router-dom'
 
+
 export default function Header() {
     const location = useLocation();
     const userData = JSON.parse(localStorage.getItem('trackIt'))  
