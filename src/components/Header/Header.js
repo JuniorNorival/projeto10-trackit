@@ -32,6 +32,8 @@ const Head = styled.div`
     display:flex;
     align-items: center;
     justify-content: space-between;
+    z-index:3;
+    
 img {
     margin:10px 18px;
 }

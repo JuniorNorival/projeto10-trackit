@@ -6,13 +6,15 @@ import Today from "../Today/Today"
 import Header from "../Header/Header"
 import Habits from "../Habits/Habits"
 import UserContext from "../../context/UserContext"
-import { useContext } from "react"
+import { useState } from "react"
+
 export default function App() {
 
+    const [habitName, setHabitName] = useState('')
     return (
 
         <BrowserRouter>
-            <UserContext.Provider value={""} >
+            <UserContext.Provider value={{habitName, setHabitName}} >
                 <GlobalStyle />
                 <Header />
                 <Routes>

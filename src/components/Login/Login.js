@@ -11,9 +11,8 @@ export default function Login() {
     const [form, setForm] = useState({
         email: '',
         password: '',
-
     });
-    
+
     const [button, setButton] = useState({
         text: 'Entrar',
         disabled: false,
@@ -23,13 +22,13 @@ export default function Login() {
     const navigate = useNavigate();
 
     function handleForm({ name, value }) {
-        
         setForm({
             ...form,
             [name]: value,
         });
 
     }
+
     function sendForm(e) {
         if (button.isSelected) {
             e.preventDefault();
@@ -45,6 +44,7 @@ export default function Login() {
         const promise = getLogin(body);
         promise.then((res) => {
             const user = res.data
+            localStorage.setItem('trackIt', JSON.stringify(user))
             navigate('/hoje', { state: { user } })
         })
         promise.catch((res) => {
@@ -58,10 +58,10 @@ export default function Login() {
 
     }
     const body = { email: form.email, password: form.password }
-    
+
     return (
         <Container>
-            
+
             <img src={logo} alt='logo' />
             <Form onSubmit={sendForm} button={button.disabled}>
                 {Object.keys(form).map((name) =>
@@ -113,7 +113,7 @@ const Form = styled.form`
 input{
     width: 303px;
     height: 45px;
-    background:${props => props.button.disabled ? '#F2F2F2' : "#FFFFFF "};
+    background-color:${props => props.button.disabled ? '#F2F2F2' : "#FFFFFF "};
     border: 1px solid #D5D5D5;
     border-radius: 5px;
     margin:5px auto;

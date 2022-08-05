@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { getTodayHabits } from "../../services/trackit";
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
+import updateLocale from 'dayjs/plugin/updateLocale'
 import { useEffect, useState } from "react";
 import Footer from "../Footer/Footer";
 
@@ -10,20 +11,25 @@ export default function Today() {
     dayjs.locale('br')
     const { state } = useLocation();
     const [habits, setHabits] = useState({})
-    localStorage.setItem('trackIt', JSON.stringify(state.user))
+
     const promise = getTodayHabits()
-    const dia = dayjs().locale('pt-br').format('dddd, DD/MM')
     useEffect(() => {
         promise.then((res) => setHabits(res.data))
-        
+
     }, [])
-    
-   
+
+    dayjs.extend(updateLocale)
+    dayjs.updateLocale('pt-br', {
+        weekdays: 'Domingo_Segunda_Terça_Quarta_Quinta_Sexta_Sábado'.split('_'),
+    })
+    const dia = dayjs().locale('pt-br').format('dddd, DD/MM')
+
+
 
     return (
         <Container>
-            <h1>{dia[0].toUpperCase() + dia.substring(1)}</h1>
-            <Footer/>
+            <h1>{dia}</h1>
+            <Footer />
         </Container>
 
     )
@@ -46,4 +52,4 @@ const Container = styled.div`
 
 `
 
-export { Container}
+export { Container }
