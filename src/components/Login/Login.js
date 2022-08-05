@@ -41,11 +41,13 @@ export default function Login() {
             disabled: true,
             isSelected: true
         })
+
         const promise = getLogin(body);
+        
         promise.then((res) => {
             const user = res.data
             localStorage.setItem('trackIt', JSON.stringify(user))
-            navigate('/hoje', { state: { user } })
+            navigate('/hoje')
         })
         promise.catch((res) => {
             alert(res.response.data.message)

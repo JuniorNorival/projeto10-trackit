@@ -8,11 +8,12 @@ import { useEffect, useState } from "react";
 import Footer from "../Footer/Footer";
 import { BoxHabit } from '../Habits/Habits';
 export default function Today() {
-    dayjs.locale('br')
+    console.log(localStorage.getItem('trackIt'))
 
     const [habitsToday, setHabitsToday] = useState('')
 
-    const promise = getTodayHabits()
+    const promise = getTodayHabits();
+
     useEffect(() => {
         promise.then((res) => setHabitsToday(res.data))
         // eslint-disable-next-line

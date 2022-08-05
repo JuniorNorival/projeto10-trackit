@@ -10,7 +10,6 @@ const config = {
 
 function getLogin(body) {
     const promise = axios.post(`${BaseURL}/auth/login`, body);
-   
     return promise
 
 }
