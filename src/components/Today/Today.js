@@ -16,14 +16,14 @@ export default function Today() {
     const [check, setCheck] = useState(false)
     const { progress, setProgress } = useContext(UserContext);
 
-
     useEffect(() => {
         const promise = getTodayHabits();
         promise.then((res) => {
             setHabitsToday(res.data)
             updateProgress(res.data)
+            
+            console.log(res.data)
         })
-
         // eslint-disable-next-line
     }, [check])
 
@@ -31,30 +31,34 @@ export default function Today() {
     dayjs.updateLocale('pt-br', {
         weekdays: 'Domingo_Segunda_Terça_Quarta_Quinta_Sexta_Sábado'.split('_'),
     })
+
     const dia = dayjs().locale('pt-br').format('dddd, DD/MM');
 
     function updateProgress(data) {
         let percent = ((data.filter(task => task.done)).length / data.length)
-       
         setProgress(percent)
-    }
-    function markHabit(id, done) {
-        console.log(done)
-        if (!done) {
-            checkHabit(id)
-        } else {
-            unCheckHabit(id)
-        }
+        
     }
 
+    function markHabit(id, done) {
+        if (done) {
+            const promise = unCheckHabit(id)
+            promise.then(()=>setCheck(!check))
+        } else {
+            const promise = checkHabit(id)
+            promise.then(()=>setCheck(!check))
+        }
+    }
+console.log('foi eu')
     return (
         <Container check={progress > 0 ? true : false}>
             <h1>{dia}</h1>
             {progress === 0 || isNaN(progress) ?
                 <h3>Nenhum hábito concluído ainda</h3> :
                 <h3>{(progress * 100).toFixed(0)}% dos hábitos concluídos</h3>}
+
             {habitsToday === '' ? '' :
-                habitsToday.map((habit, index) =>
+                habitsToday.map((habit) =>
                     <BoxHabit key={habit.id} direction={'row'} >
                         <div>
                             <h2>{habit.name}</h2>
@@ -73,7 +77,7 @@ export default function Today() {
                                 width="69px"
                                 onClick={() => {
                                     markHabit(habit.id, habit.done)
-                                    setCheck(!check)
+                                    
                                 }}
                             />
                         </Check>

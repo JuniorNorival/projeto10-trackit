@@ -28,6 +28,7 @@ export default function Login() {
             localStorage.setItem('trackIt', JSON.stringify(user))
             navigate('/hoje')
         })
+        
         promise.catch((res) => {
             alert(res.response.data.message)
             setButton({

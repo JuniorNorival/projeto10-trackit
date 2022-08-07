@@ -1,10 +1,15 @@
 import styled from 'styled-components'
 import Footer from '../Footer/Footer'
+import Calendar from 'react-calendar';
+import { useState } from 'react';
+import 'react-calendar/dist/Calendar.css'
 export default function Historic() {
+    const [value, onChange] = useState(new Date());
     return (
         <Container>
             <h1>Meus Hábitos</h1>
             <p>Em breve você poderá ver o histórico dos seus hábitos aqui!</p>
+            <Calendar onChange={onChange} value={value} />
             <Footer/>
         </Container>
     )
