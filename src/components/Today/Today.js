@@ -13,16 +13,19 @@ import { useContext } from 'react';
 export default function Today() {
 
     const [habitsToday, setHabitsToday] = useState('')
-    const promise = getTodayHabits();
-    const { check, setCheck } = useContext(UserContext)
+    const [check, setCheck] = useState(false)
     const { progress, setProgress } = useContext(UserContext);
-    let cont = 0;
+
 
     useEffect(() => {
-        promise.then((res) => setHabitsToday(res.data))
+        const promise = getTodayHabits();
+        promise.then((res) => {
+            setHabitsToday(res.data)
+            updateProgress(res.data)
+        })
 
         // eslint-disable-next-line
-    }, [])
+    }, [check])
 
     dayjs.extend(updateLocale)
     dayjs.updateLocale('pt-br', {
@@ -30,53 +33,37 @@ export default function Today() {
     })
     const dia = dayjs().locale('pt-br').format('dddd, DD/MM');
 
+    function updateProgress(data) {
+        let percent = ((data.filter(task => task.done)).length / data.length)
+       
+        setProgress(percent)
+    }
     function markHabit(id, done) {
         console.log(done)
         if (!done) {
             checkHabit(id)
-            if (check === habitsToday.length) {
-                return
-            }
-            setCheck(check + 1)
         } else {
             unCheckHabit(id)
-            if (check !== 0) {
-                setCheck(check - 1)
-            }
         }
-        const promise = getTodayHabits();
-        promise.then((res) => setHabitsToday(res.data))
-        console.log('opa')
-    }
-
-    if (habitsToday.length > 0) {
-        habitsToday.map((habit) => {
-            if (habit.done) {
-                cont++
-                setCheck(cont)
-            }
-        })
-        setProgress(check / habitsToday.length)
-
     }
 
     return (
-        <Container check={progress>0 ? true:false}>
+        <Container check={progress > 0 ? true : false}>
             <h1>{dia}</h1>
-            {progress === 0 ? <h3>Nenhum hábito concluído ainda</h3> :
+            {progress === 0 || isNaN(progress) ?
+                <h3>Nenhum hábito concluído ainda</h3> :
                 <h3>{(progress * 100).toFixed(0)}% dos hábitos concluídos</h3>}
             {habitsToday === '' ? '' :
                 habitsToday.map((habit, index) =>
                     <BoxHabit key={habit.id} direction={'row'} >
                         <div>
                             <h2>{habit.name}</h2>
-                            <Sequence check={habit.done}>Sequência atual:
-                                <p>{habit.currentSequence} dias</p>
+                            <Sequence check={habit.done}>
+                                Sequência atual:<p>{habit.currentSequence} dias</p>
                             </Sequence>
                             <Sequence check={habit.currentSequence === habit.highestSequence &&
-                                habit.highestSequence !== 0 ? true : false}
-                            >Seu Recorde:
-                                <p>{habit.highestSequence} dias</p>
+                                habit.highestSequence !== 0 ? true : false}>
+                                Seu Recorde:<p>{habit.highestSequence} dias</p>
                             </Sequence>
                         </div>
                         <Check >
@@ -84,7 +71,10 @@ export default function Today() {
                                 color={habit.done === false ? '#EBEBEB' : '#8FC549'}
                                 height="69px"
                                 width="69px"
-                                onClick={() => { markHabit(habit.id, habit.done) }}
+                                onClick={() => {
+                                    markHabit(habit.id, habit.done)
+                                    setCheck(!check)
+                                }}
                             />
                         </Check>
                     </BoxHabit>
@@ -114,7 +104,7 @@ const Container = styled.div`
     font-weight: 400;
     font-size: 17.976px;
     line-height: 22px;
-    color:${props=> props.check ? '#8FC549':'#BABABA'};
+    color:${props => props.check ? '#8FC549' : '#BABABA'};
     }
    
 

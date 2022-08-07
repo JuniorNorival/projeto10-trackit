@@ -5,17 +5,16 @@ import { getSignUp } from '../../services/trackit';
 import { useNavigate, Link } from 'react-router-dom';
 import { ThreeDots } from 'react-loader-spinner';
 import Input from '../Input/Input';
+import { sendForm } from '../../helpers/loginFunctions'
 
 export default function SingUp() {
-
     const [form, setForm] = useState({
         email: '',
         password: '',
         name: '',
         image: '',
-
-
     });
+
     const [button, setButton] = useState({
         text: 'Cadastrar',
         disabled: false,
@@ -23,35 +22,19 @@ export default function SingUp() {
     })
     const navigate = useNavigate();
 
-    function handleForm({ name, value }) {
+    function send(e) {
+        const promise = sendForm(e, button, setButton, form, getSignUp)
 
-        setForm({
-            ...form,
-            [name]: value,
-        });
-
-    }
-    function sendForm(e) {
-
-        if (button.isSelected) {
-            e.preventDefault();
-            return
-        }
-
-        e.preventDefault();
         setButton({
             text: <ThreeDots color="#f9fcfd" height={80} width={80} />,
             disabled: true,
             isSelected: true
         })
 
-        const promise = getSignUp(form);
-
-       promise.then(() => {
+        promise.then(() => {
             alert("Cadastro Realizado Com sucesso")
             navigate('/')
         })
-
 
         promise.catch((res) => {
             alert(res.response.data.message)
@@ -62,19 +45,19 @@ export default function SingUp() {
             })
         })
 
-
     }
 
     return (
         <Container>
             <img src={logo} alt='logo' />
-            <Form onSubmit={sendForm} button={button.disabled} >
+            <Form onSubmit={(e) => send(e)} button={button.disabled} >
                 {Object.keys(form).map((name) =>
                     <Input
                         key={name}
                         name={name}
                         button={button.disabled}
-                        handleForm={handleForm} />)}
+                        form={form}
+                        setForm={setForm} />)}
                 <button type='submit'>{button.text}</button>
             </Form>
             <Link to='/'>

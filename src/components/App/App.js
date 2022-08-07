@@ -13,11 +13,11 @@ export default function App() {
 
     
     const [progress, setProgress] = useState(0)
-    const [check, setCheck] = useState(0)
+  
     return (
 
         <BrowserRouter>
-            <UserContext.Provider value={{progress, setProgress, check, setCheck}} >
+            <UserContext.Provider value={{progress, setProgress}} >
                 <GlobalStyle />
                 <Header />
                 <Routes>

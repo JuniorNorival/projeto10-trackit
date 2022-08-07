@@ -6,7 +6,7 @@ import UserContext from "../../context/UserContext";
 import { useContext } from 'react';
 
 export default function Footer() {
-    const { progress, setProgress } = useContext(UserContext);
+    const { progress } = useContext(UserContext);
 
     return (
         <Foot>
