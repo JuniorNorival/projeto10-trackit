@@ -1,6 +1,6 @@
 import { handleForm } from '../../helpers/loginFunctions'
 export default function Input({name, button, form,setForm}) {
-   console.log(form)
+
     return (
         <input type={name ==='image' ? 'text':name}
             name={name}

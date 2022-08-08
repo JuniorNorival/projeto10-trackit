@@ -1,34 +1,33 @@
 import { Container } from "../Today/Today"
 import styled from 'styled-components'
 import add from '../../assets/images/add.jpeg'
-import { getHabits, deleteHabit } from "../../services/trackit";
-import { useState, useEffect } from "react";
+import { getHabits, deleteHabit, getTodayHabits } from "../../services/trackit";
+import { useState, useEffect, useContext } from "react";
 import Footer from "../Footer/Footer";
 import { weekDays } from "../../helpers/WeekDays/weekday";
 import NewHabit from "../NewHabit/NewHabit";
 import { TrashOutline } from 'react-ionicons'
-
+import UserContext from "../../context/UserContext";
+import { updateProgress } from "../../helpers/progress";
 
 export default function Habits() {
     const [habits, setHabits] = useState({})
-    const [habitsAdd, setHabitsAdd] = useState({
-        visible: false,
-        disabled: false
-    })
+    const [habitsAdd, setHabitsAdd] = useState(false)
     const [habitName, setHabitName] = useState('')
     const [updateHabits, setUpdateHabits] = useState(false)
-
+    const {setProgress} = useContext(UserContext)
     useEffect(() => {
         const promise = getHabits()
         promise.then((res) => setHabits(res.data))
+        getTodayHabits().then((res)=> updateProgress(res.data, setProgress))
         // eslint-disable-next-line
     }, [habitsAdd, updateHabits])
 
     function delHabit(id) {
         const confirm = window.confirm('Tem Certeza ?');
         if (confirm) {
-            deleteHabit(id)
-            setUpdateHabits(!updateHabits)
+            deleteHabit(id).then(()=>setUpdateHabits(!updateHabits))
+           
         }
         return
 
@@ -40,12 +39,11 @@ export default function Habits() {
             <Higher>
                 <h2>Meus Hábitos</h2>
                 <img src={add} alt="buttonAdd"
-                    onClick={() => setHabitsAdd({ visible: true, disabled: false })} />
+                    onClick={() => setHabitsAdd(true)} />
             </Higher>
             <MyHabits>
-                {!habitsAdd.visible ? '' :
-                    <NewHabit habitName={habitName} setHabitName={setHabitName}
-                        habitsAdd={habitsAdd} setHabitsAdd={setHabitsAdd} />
+                {habitsAdd ? <NewHabit habitName={habitName} setHabitName={setHabitName}
+                        habitsAdd={habitsAdd} setHabitsAdd={setHabitsAdd} /> : ''   
                 }
 
                 {habits.length > 0 ?

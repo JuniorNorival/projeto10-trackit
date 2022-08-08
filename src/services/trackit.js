@@ -67,4 +67,11 @@ function unCheckHabit(idHabit) {
     const promise = axios.post(`${BaseURL}/habits/${idHabit}/uncheck`, {}, config)
     return promise
 }
-export { getLogin, getSignUp, getTodayHabits, getHabits, postHabits, deleteHabit, checkHabit, unCheckHabit }
+
+function getHistoric (){
+    const config = createConfig();
+    const promise = axios.get (`${BaseURL}/habits/history/daily`, config);
+    return promise;
+}
+export { getLogin, getSignUp, getTodayHabits, getHabits, 
+    postHabits, deleteHabit, checkHabit, unCheckHabit, getHistoric }

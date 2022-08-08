@@ -1,30 +1,34 @@
 import styled from 'styled-components'
 import { weekDays } from "../../helpers/WeekDays/weekday";
-import { useState } from 'react';
-import { postHabits } from '../../services/trackit';
+import { useContext, useState } from 'react';
+import { getTodayHabits, postHabits } from '../../services/trackit';
+import { updateProgress } from '../../helpers/progress';
+import UserContext from '../../context/UserContext';
 
 export default function NewHabit({ habitName, setHabitName, habitsAdd, setHabitsAdd }) {
     const [idDay, setIdDay] = useState([])
-
+    const [disable, setDisable] = useState(false)
+    const {setProgress} = useContext(UserContext)
     function sendHabit() {
+        if (idDay.length === 0){
+            alert('Escolha ao menos um dia da semana')
+            return
+        }
+        setDisable(true)
         const body = { name: habitName, days: idDay }
         const promise = postHabits(body)
         promise.then(() => {
             setHabitName('')
             setIdDay('')
             weekDays.map((day) => day.selected = false)
-            setHabitsAdd({
-                visible: false,
-                disabled: true
-            })
+            setHabitsAdd(false)
+            getTodayHabits().then((res)=> updateProgress(res.data, setProgress))
 
         })
         promise.catch(() => {
             alert('Erro ao Salvar Habito')
-            setHabitsAdd({
-                visible: true,
-                disabled: false
-            })
+            setHabitsAdd(true)
+            setDisable(false)
         })
 
     }
@@ -50,23 +54,18 @@ export default function NewHabit({ habitName, setHabitName, habitsAdd, setHabits
             <BoxDay>
                 {weekDays.map((d) =>
                     <Days key={d.id} selected={d.selected}
-                        onClick={() => selectDay(setIdDay, d)}>
+                        onClick={() => disable ? '':selectDay(setIdDay, d) }>
                         {d.name}</Days>)}
             </BoxDay>
             <BoxButton>
                 <Button
                     name={1}
-                    onClick={() => {
-                        setHabitsAdd({
-                            visible: false,
-                            disabled: false
-                        })
-                    }}
-                    disabled={habitsAdd.disabled}>Cancelar</Button>
+                    onClick={() => setHabitsAdd(false)}
+                    disabled={disable}>Cancelar</Button>
                 <Button
                     name={2}
                     onClick={() => sendHabit()}
-                    disabled={habitsAdd.disabled}>Salvar</Button>
+                    disabled={disable}>Salvar</Button>
             </BoxButton>
 
         </Box>

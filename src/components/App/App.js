@@ -13,12 +13,12 @@ export default function App() {
 
     
     const [progress, setProgress] = useState(0)
-    
+    const [habitsToday, setHabitsToday] = useState('')
   
     return (
 
         <BrowserRouter>
-            <UserContext.Provider value={{progress, setProgress}} >
+            <UserContext.Provider value={{progress, setProgress, habitsToday, setHabitsToday}} >
                 <GlobalStyle />
                 <Header />
                 <Routes>

@@ -9,10 +9,10 @@ import { BoxHabit } from '../Habits/Habits';
 import { CheckboxSharp } from 'react-ionicons'
 import UserContext from "../../context/UserContext";
 import { useContext } from 'react';
-
+import { updateProgress } from '../../helpers/progress';
 export default function Today() {
 
-    const [habitsToday, setHabitsToday] = useState('')
+    const {habitsToday, setHabitsToday} = useContext(UserContext);
     const [check, setCheck] = useState(false)
     const { progress, setProgress } = useContext(UserContext);
 
@@ -20,9 +20,8 @@ export default function Today() {
         const promise = getTodayHabits();
         promise.then((res) => {
             setHabitsToday(res.data)
-            updateProgress(res.data)
+            updateProgress(res.data, setProgress)
             
-            console.log(res.data)
         })
         // eslint-disable-next-line
     }, [check])
@@ -31,15 +30,10 @@ export default function Today() {
     dayjs.updateLocale('pt-br', {
         weekdays: 'Domingo_Segunda_Terça_Quarta_Quinta_Sexta_Sábado'.split('_'),
     })
-
+    
     const dia = dayjs().locale('pt-br').format('dddd, DD/MM');
-
-    function updateProgress(data) {
-        let percent = ((data.filter(task => task.done)).length / data.length)
-        setProgress(percent)
-        
-    }
-
+    
+    
     function markHabit(id, done) {
         if (done) {
             const promise = unCheckHabit(id)
@@ -49,7 +43,7 @@ export default function Today() {
             promise.then(()=>setCheck(!check))
         }
     }
-console.log('foi eu')
+
     return (
         <Container check={progress > 0 ? true : false}>
             <h1>{dia}</h1>
@@ -77,7 +71,6 @@ console.log('foi eu')
                                 width="69px"
                                 onClick={() => {
                                     markHabit(habit.id, habit.done)
-                                    
                                 }}
                             />
                         </Check>
@@ -134,4 +127,4 @@ const Sequence = styled.div`
     }
     `
 
-export { Container }
+export { Container}

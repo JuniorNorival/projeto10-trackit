@@ -2,15 +2,17 @@ import styled from 'styled-components'
 import Footer from '../Footer/Footer'
 import Calendar from 'react-calendar';
 import { useState } from 'react';
-import 'react-calendar/dist/Calendar.css'
+import 'react-calendar/dist/Calendar.css';
+import { getHistoric } from '../../services/trackit';
 export default function Historic() {
-    const [value, onChange] = useState(new Date());
+   
     return (
         <Container>
             <h1>Meus Hábitos</h1>
             <p>Em breve você poderá ver o histórico dos seus hábitos aqui!</p>
-            <Calendar onChange={onChange} value={value} />
-            <Footer/>
+            
+
+            <Footer />
         </Container>
     )
 }
@@ -35,4 +37,13 @@ p{
         color: #666666;
         margin-left:18px;
     }
+`
+const CalendarWrapper = styled.div`
+.tudo-verde {
+    width:10px; 
+    height: 30px;
+    border-radius:100px;
+    
+    background-color: #1af307;
+}
 `

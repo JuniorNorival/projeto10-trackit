@@ -1,7 +1,7 @@
 import { ThreeDots } from 'react-loader-spinner'
 
 function handleForm({ name, value, form, setForm }) {
-    console.log(setForm)
+    
     setForm({
         ...form,
         [name]: value,
