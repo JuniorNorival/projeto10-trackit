@@ -10,6 +10,7 @@ import { CheckboxSharp } from 'react-ionicons'
 import UserContext from "../../context/UserContext";
 import { useContext } from 'react';
 import { updateProgress } from '../../helpers/progress';
+import Loading from '../Loading/Loading';
 export default function Today() {
 
     const {habitsToday, setHabitsToday} = useContext(UserContext);
@@ -51,7 +52,7 @@ export default function Today() {
                 <h3>Nenhum hábito concluído ainda</h3> :
                 <h3>{(progress * 100).toFixed(0)}% dos hábitos concluídos</h3>}
 
-            {habitsToday === '' ? '' :
+            {habitsToday === '' ? <Loading/> :
                 habitsToday.map((habit) =>
                     <BoxHabit key={habit.id} direction={'row'} >
                         <div>

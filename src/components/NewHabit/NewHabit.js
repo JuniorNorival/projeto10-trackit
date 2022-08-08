@@ -5,7 +5,7 @@ import { getTodayHabits, postHabits } from '../../services/trackit';
 import { updateProgress } from '../../helpers/progress';
 import UserContext from '../../context/UserContext';
 
-export default function NewHabit({ habitName, setHabitName, habitsAdd, setHabitsAdd }) {
+export default function NewHabit({ habitName, setHabitName, setHabitsAdd }) {
     const [idDay, setIdDay] = useState([])
     const [disable, setDisable] = useState(false)
     const {setProgress} = useContext(UserContext)

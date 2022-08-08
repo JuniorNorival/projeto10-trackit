@@ -9,6 +9,7 @@ import NewHabit from "../NewHabit/NewHabit";
 import { TrashOutline } from 'react-ionicons'
 import UserContext from "../../context/UserContext";
 import { updateProgress } from "../../helpers/progress";
+import Loading from "../Loading/Loading";
 
 export default function Habits() {
     const [habits, setHabits] = useState({})
@@ -16,6 +17,7 @@ export default function Habits() {
     const [habitName, setHabitName] = useState('')
     const [updateHabits, setUpdateHabits] = useState(false)
     const {setProgress} = useContext(UserContext)
+console.log(habits)
     useEffect(() => {
         const promise = getHabits()
         promise.then((res) => setHabits(res.data))
@@ -32,18 +34,23 @@ export default function Habits() {
         return
 
     }
-
+    if (habits ==='' ){
+        console.log(habits)
+        return <Loading/>
+    }
 
     return (
+        
         <Container>
             <Higher>
                 <h2>Meus Hábitos</h2>
                 <img src={add} alt="buttonAdd"
                     onClick={() => setHabitsAdd(true)} />
             </Higher>
+            
             <MyHabits>
                 {habitsAdd ? <NewHabit habitName={habitName} setHabitName={setHabitName}
-                        habitsAdd={habitsAdd} setHabitsAdd={setHabitsAdd} /> : ''   
+                        habitsAdd={habitsAdd} setHabitsAdd={setHabitsAdd} /> : ''  
                 }
 
                 {habits.length > 0 ?
@@ -63,9 +70,9 @@ export default function Habits() {
                                     width="13px"
                                 />
                             </Trash>
-                        </BoxHabit>) :
-                    <p>{`Você não tem nenhum hábito cadastrado ainda.
-                    Adicione um hábito para começar a trackear!`}</p>}
+                        </BoxHabit>) : 
+                    <p>Você não tem nenhum hábito cadastrado ainda.
+                    Adicione um hábito para começar a trackear!</p>}
             </MyHabits>
 
             <Footer />
@@ -99,6 +106,7 @@ const MyHabits = styled.div`
 
 width: 100%;
 p{
+    margin:18px;
     font-weight: 400;
     font-size: 17.976px;
     line-height: 22px;
